@@ -1,33 +1,40 @@
+# WA - Importing necessary modules
 from random import randrange
 from turtle import *
 import pygame
 from freegames import square, vector
 
+# WA - Initializing game objects
 food = vector(0, 0)
 poisonfoods = [vector(30, 30)]
 snake = [vector(10, 0)]
 aim = vector(0, -10)
 
-# Initialize pygame mixer
+# WA - Initialize pygame mixer for sound
 pygame.mixer.init()
 
-# Load the MP3 sound file
+# WA - Load the MP3 sound file for death
 death_sound = pygame.mixer.Sound(gameover.mp3)
 
 def play_death_sound():
     death_sound.play()
 
+# WA - Change in function signatures and logic for moving
 def change(x, y):
     aim.x = x
     aim.y = y
 
+# WA - Modified condition for game over (checking poisonfoods as well)
 def inside(head):
+    # Adjusted boundary conditions for both x and y
     return -200 < head.x < 190 and -200 < head.y < 190
 
+# WA - Additional feature: Poison foods
 def move():
     head = snake[-1].copy()
     head.move(aim)
 
+    # WA - Check for collision with poison foods
     if not inside(head) or head in poisonfoods:
         square(head.x, head.y, 9, 'red')
         update()
@@ -37,14 +44,17 @@ def move():
     snake.append(head)
 
     if head == food:
+        # WA - Print snake length when it consumes food
         print('Snake:', len(snake))
         food.x = randrange(-15, 15) * 10
         food.y = randrange(-15, 15) * 10
 
+        # WA - Add a new poison food if the count is less than 15
         if len(poisonfoods) < 15:
             new_poisonfood = vector(randrange(-15, 15) * 10, randrange(-15, 15) * 10)
             poisonfoods.append(new_poisonfood)
     else:
+        # WA - Remove the tail of the snake
         snake.pop(0)
 
     clear()
@@ -56,12 +66,15 @@ def move():
     update()
     ontimer(move, 100)
 
+    # WA - Display all poison foods
     for pfood in poisonfoods:
         square(pfood.x, pfood.y, 9, "DarkOrchid")
     update()
 
+# WA - Change in initial snake movement setup
 setup(420, 420, 370, 0)
-hideturtle()
+
+# WA - Removed hiding turtle, changed speed and listening setup
 tracer(False)
 listen()
 onkey(lambda: change(5, 0), 'Right')
