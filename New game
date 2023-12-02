@@ -1,3 +1,5 @@
+# WA - The commentary on this file is dedicated to the change made from the original code.
+
 # WA - Importing necessary modules
 from random import randrange
 from turtle import *
