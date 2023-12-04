@@ -92,13 +92,17 @@ def move():
         double_food.y = -10
         update_score(2)  # Increase score by 2 when the snake eats the double food
 
+        # If a double food was eaten, change the regular food's position
+        food.x = randrange(-15, 15) * 10
+        food.y = randrange(-15, 15) * 10
+
     else:
         snake.pop(0)
 
     clear()
 
     for body in snake:
-        square(body.x, body.y, 9, 'black')
+        square(body.x, body.y, 9, 'coral2')
 
     square(food.x, food.y, 9, 'green')
     if double_food.x != -10:  # Check if double food is on the screen
