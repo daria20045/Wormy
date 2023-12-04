@@ -12,7 +12,7 @@ aim = vector(0, -10)
 foods_eaten = 0  # Track the number of regular foods eaten
 score = 0  # Track the score
 
-# Initialize the screen and score display
+# WA - Initialize the screen and score display
 bgcolor('bisque')
 setup(420, 420, 370, 0)
 tracer(False)
@@ -24,14 +24,14 @@ score_display.penup()
 score_display.goto(-190, 190)
 score_display.write("Score: 0", font=("Arial", 12, "bold"))
 
-# Initialize pygame mixer for sound
+# WA - Initialize pygame mixer for sound
 pygame.mixer.init()
 death_sound = pygame.mixer.Sound("gameover.mp3")
 
 def play_death_sound():
     death_sound.play()
 
-# Change in function signatures and logic for moving
+# WA - Change in function signatures and logic for moving
 def change(x, y):
     aim.x = x
     aim.y = y
