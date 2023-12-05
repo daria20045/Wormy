@@ -6,13 +6,13 @@ from random import randrange
 from freegames import square, vector
 import types 
 
-#DB Setting the parameters of the background and hiding the turtle cursor.
+#WA Setting the parameters of the background and hiding the turtle cursor.
 bgcolor('burlywood')       
 setup(420,420,320,0)
 hideturtle()
 tracer(False)
 
-#DB Setting up the objects in the game
+#JM Setting up the objects in the game
 food = vector(0,0)
 worm = [vector(10,0)]
 aim = vector(0,-10)
@@ -21,26 +21,27 @@ poison_food = vector(60,60)
 state = types.SimpleNamespace()
 state.snake_length = 1 #Used to store the length of the snake during the game as a state
 
-#DB Changes the direction of where the worm is heading
+#JM Changes the direction of where the worm is heading
 def change(x,y):
     aim.x = x
     aim.y = y
 
-#DB Checks if the worm is within the boundaries of the game
+#WA Checks if the worm is within the boundaries of the game
 def inside(head):
     return -200< head.x < 190 and -200 < head.y < 190
 
-#DB Moves the snake
+#JM Moves the snake
 def move():
     head = worm[-1].copy()
     head.move(aim)
     
-    #DB Checks if the worm has ran into itself, touched a boundary, or ate the poisonous food
+    #WA Checks if the worm has ran into itself, touched a boundary, or ate the poisonous food
     if head in worm or not inside(head) or head == poison_food:
         square(head.x, head.y, 9, 'red')
         update()
         return 
-    #DB Adds to the length of the worm by adding to its head
+
+    #JM Adds to the length of the worm by adding to its head
     worm.append(head)
     
 #DB Checks if the worm's head has eaten the food or the double food and adds to its length accordingly
@@ -68,17 +69,17 @@ def move():
         poison_food.x = random.randrange(-15,15)*10
         poison_food.y = random.randrange(-15,15)*10
         
-    #DB If the worm runs into itself, runs into a boundary, or eats the poison food its head is removed 
+    #JM If the worm runs into itself, runs into a boundary, or eats the poison food its head is removed 
     else:
         worm.pop(0)
         
     clear()
     
-    #DB Determines the dimension and colour of the worm
+    #WA Determines the dimension and colour of the worm
     for body in worm:
         square(body.x, body.y, 9, 'coral2')
         
-    #Defines the dimension and colour of the food, double food, and poison food  
+    #JM Defines the dimension and colour of the food, double food, and poison food  
     square(food.x, food.y, 9, 'DarkRed')
     square(double_food.x, double_food.y, 9, 'DarkRed')
     square(poison_food.x, poison_food.y, 9, 'DarkRed')
@@ -92,6 +93,6 @@ onkey(lambda : change(-10,0), 'Left')
 onkey(lambda : change(0,10), 'Up')
 onkey(lambda : change(0,-10), 'Down')
 
-#DB These functions start the loop of the game
+#WA These functions start the loop of the game
 move()
 done()
