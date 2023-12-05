@@ -1,0 +1,128 @@
+# WA - Importing necessary modules
+from random import randrange
+from turtle import *
+import pygame
+from freegames import square, vector
+
+# WA - Initializing game objects
+food = vector(randrange(-15, 15) * 10, randrange(-15, 15) * 10)  # Initial regular food spawn
+poisonfoods = []
+snake = [vector(10, 0)]
+aim = vector(0, -10)
+foods_eaten = 0  # Track the number of regular foods eaten
+score = 0  # Track the score
+
+# Initialize the screen and score display
+bgcolor('bisque')
+setup(420, 420, 370, 0)
+tracer(False)
+
+# Create a turtle for displaying the score
+score_display = Turtle(visible=False)
+score_display.color("dark green")
+score_display.penup()
+score_display.goto(-190, 190)
+score_display.write("Score: 0", font=("Arial", 12, "bold"))
+
+# Initialize pygame mixer for sound
+pygame.mixer.init()
+death_sound = pygame.mixer.Sound("C:/Users/jmyob/Downloads/gameover.mp3")
+
+def play_death_sound():
+    death_sound.play()
+
+# Change in function signatures and logic for moving
+def change(x, y):
+    aim.x = x
+    aim.y = y
+
+# Modified condition for game over (checking poisonfoods as well)
+def inside(head):
+    return -200 < head.x < 190 and -200 < head.y < 190
+
+double_food = vector(-10, -10)  # Initial position for the double food, off-screen
+
+# Function to spawn a poison food
+def spawn_poisonfood():
+    if len(poisonfoods) < 15:  # Ensure there's no cap on poison food spawning
+        new_poisonfood = vector(randrange(-15, 15) * 10, randrange(-15, 15) * 10)
+        poisonfoods.append(new_poisonfood)
+
+# Function to spawn double food
+def spawn_double_food():
+    double_food.x = randrange(-15, 15) * 10
+    double_food.y = randrange(-15, 15) * 10
+
+# Function to update score
+def update_score(value):
+    global score
+    score += value
+
+# Additional feature: Movement logic
+def move():
+    global foods_eaten, score  # Access the foods_eaten and score variables from outer scope
+    head = snake[-1].copy()
+    head.move(aim)
+
+    if not inside(head) or head in poisonfoods or head in snake:
+        square(head.x, head.y, 9, 'red')
+        update()
+        play_death_sound()  # Play sound when the snake dies
+        return
+
+    snake.append(head)
+
+    if head == food:
+        print('Snake:', len(snake))
+        food.x = randrange(-15, 15) * 10
+        food.y = randrange(-15, 15) * 10
+        foods_eaten += 1  # Increment the count of regular foods eaten
+        update_score(1)  # Increase score by 1 for every regular food eaten
+
+        if score >= 4 and double_food.x == -10:  # Allow double food after score reaches 4
+            spawn_double_food()  # Spawn double food after reaching a score of 4
+
+        spawn_poisonfood()  # Spawn a poison food after each regular or double food
+
+    elif head == double_food:  # Check if the head hits the double food
+        print('Snake:', len(snake) + 2)  # Add two units to the snake length
+        snake.append(snake[-1].copy())  # Add one unit
+        snake.append(snake[-1].copy())  # Add another unit
+        double_food.x = -10  # Move double food off-screen after being eaten
+        double_food.y = -10
+        update_score(2)# Increase score by 2 when the snake eats the double food
+        spawn_poisonfood()
+
+        # If a double food was eaten, change the regular food's position
+        food.x = randrange(-15, 15) * 10
+        food.y = randrange(-15, 15) * 10
+
+    else:
+        snake.pop(0)
+
+    clear()
+
+    for body in snake:
+        square(body.x, body.y, 9, 'coral2')
+
+    square(food.x, food.y, 9, 'green')
+    if double_food.x != -10:  # Check if double food is on the screen
+        square(double_food.x, double_food.y, 9, 'gold')  # Change color to gold
+    
+    # Spawn and display poison foods
+    for pfood in poisonfoods:
+        square(pfood.x, pfood.y, 9, "DarkOrchid")
+    
+    score_display.clear()  # Clear the previous score
+    score_display.write(f"Score: {score}", font=("Arial", 12, "bold"))  # Update score display
+    update()
+    ontimer(move, 100)
+
+# Removed hiding turtle, changed speed and listening setup
+listen()
+onkey(lambda: change(10, 0), 'Right')
+onkey(lambda: change(-10, 0), 'Left')
+onkey(lambda: change(0, 10), 'Up')
+onkey(lambda: change(0, -10), 'Down')
+move()
+done()
