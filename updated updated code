@@ -1,10 +1,10 @@
-# WA - Importing necessary modules
+# Importing necessary modules
 from random import randrange
 from turtle import *
 import pygame
 from freegames import square, vector
 
-# WA - Initializing game objects
+# Initializing game objects
 food = vector(randrange(-15, 15) * 10, randrange(-15, 15) * 10)  # Initial regular food spawn
 poisonfoods = []
 snake = [vector(10, 0)]
